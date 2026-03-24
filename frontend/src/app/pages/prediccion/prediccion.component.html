@@ -1,0 +1,162 @@
+<div class="prediccion-page">
+
+  <div class="page-header">
+    <h1>Analizar Licitación</h1>
+    <p>Ingresa los datos de la licitación para predecir tu probabilidad de éxito</p>
+  </div>
+
+  <div class="prediccion-layout">
+
+    <!-- Formulario -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>analytics</mat-icon>
+        <mat-card-title>Datos de la licitación</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="analizar()" class="form">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Entidad contratante</mat-label>
+            <input matInput formControlName="entidad" placeholder="Gobernación de Cundinamarca">
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-error *ngIf="form.get('entidad')?.hasError('required')">Requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cuantía (COP)</mat-label>
+            <input matInput formControlName="cuantia" type="number" placeholder="350000000">
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <mat-error *ngIf="form.get('cuantia')?.hasError('required')">Requerido</mat-error>
+            <mat-error *ngIf="form.get('cuantia')?.hasError('min')">Debe ser mayor a 0</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de contrato</mat-label>
+            <mat-select formControlName="sector">
+              <mat-option *ngFor="let s of sectores()" [value]="s">{{ s }}</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+            <mat-error *ngIf="form.get('sector')?.hasError('required')">Requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Modalidad de contratación</mat-label>
+            <mat-select formControlName="modalidad">
+              <mat-option value="">-- Ninguna --</mat-option>
+              <mat-option *ngFor="let m of modalidades" [value]="m">{{ m }}</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>gavel</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Municipio</mat-label>
+            <input matInput formControlName="municipio" placeholder="Bogotá">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="limpiar()">
+              <mat-icon>clear</mat-icon> Limpiar
+            </button>
+            <button mat-raised-button color="primary" type="submit"
+              [disabled]="form.invalid || cargando()">
+              <mat-spinner diameter="18" *ngIf="cargando()"></mat-spinner>
+              <mat-icon *ngIf="!cargando()">bolt</mat-icon>
+              <span>{{ cargando() ? 'Analizando...' : 'Analizar' }}</span>
+            </button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Resultado -->
+    <div class="resultado-panel">
+
+      <!-- Estado vacío -->
+      <div class="empty-resultado" *ngIf="!resultado() && !cargando()">
+        <mat-icon>query_stats</mat-icon>
+        <p>Completa el formulario y presiona <strong>Analizar</strong> para ver tu resultado</p>
+      </div>
+
+      <!-- Cargando -->
+      <div class="empty-resultado" *ngIf="cargando()">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Consultando el modelo de IA...</p>
+      </div>
+
+      <!-- Resultado -->
+      <mat-card class="resultado-card" *ngIf="resultado() && !cargando()">
+        <mat-card-content>
+
+          <!-- Porcentaje -->
+          <div class="gauge-container">
+            <div class="gauge-circle" [style.border-color]="getColor(resultado().porcentaje)">
+              <span class="gauge-number" [style.color]="getColor(resultado().porcentaje)">
+                {{ resultado().porcentaje }}%
+              </span>
+              <span class="gauge-label">probabilidad</span>
+            </div>
+            <div class="gauge-info">
+              <h2 [style.color]="getColor(resultado().porcentaje)">
+                {{ getLabel(resultado().porcentaje) }}
+              </h2>
+              <mat-chip [style.background]="resultado().modo === 'real' ? '#e8f5e9' : '#fff8e1'">
+                <mat-icon>{{ resultado().modo === 'real' ? 'psychology' : 'rule' }}</mat-icon>
+                {{ resultado().modo === 'real' ? 'Modelo Random Forest' : 'Estimación por reglas' }}
+              </mat-chip>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Factores positivos -->
+          <div class="factores" *ngIf="resultado().factores_positivos?.length > 0">
+            <h3><mat-icon class="icon-pos">thumb_up</mat-icon> Factores a favor</h3>
+            <ul>
+              <li *ngFor="let f of resultado().factores_positivos">{{ f }}</li>
+            </ul>
+          </div>
+
+          <!-- Factores negativos -->
+          <div class="factores" *ngIf="resultado().factores_negativos?.length > 0">
+            <h3><mat-icon class="icon-neg">thumb_down</mat-icon> Factores en contra</h3>
+            <ul>
+              <li *ngFor="let f of resultado().factores_negativos">{{ f }}</li>
+            </ul>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Recomendaciones -->
+          <div class="recomendaciones" *ngIf="resultado().recomendaciones?.length > 0">
+            <h3><mat-icon>lightbulb</mat-icon> Recomendaciones</h3>
+            <ol>
+              <li *ngFor="let r of resultado().recomendaciones">{{ r }}</li>
+            </ol>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Historial -->
+  <section class="historial" *ngIf="historial().length > 0">
+    <h2>Mis análisis anteriores</h2>
+    <div class="historial-grid">
+      <mat-card *ngFor="let p of historial().slice(0, 6)" class="hist-card">
+        <mat-card-content>
+          <div class="hist-header">
+            <span class="hist-entidad">{{ p.entidad }}</span>
+            <span class="hist-pct" [style.color]="getColor(p.porcentaje)">{{ p.porcentaje }}%</span>
+          </div>
+          <span class="hist-sector">{{ p.sector }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+</div>

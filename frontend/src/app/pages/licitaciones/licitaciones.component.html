@@ -1,0 +1,136 @@
+<div class="licitaciones-page">
+
+  <div class="page-header">
+    <h1>Licitaciones SECOP II</h1>
+    <p>Explora contratos públicos colombianos en tiempo real</p>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="buscar()" class="filtros-form">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo de contrato</mat-label>
+          <mat-select formControlName="tipo_contrato">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let s of sectores()" [value]="s">{{ s }}</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="estado">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let e of estados" [value]="e">{{ e }}</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>flag</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ciudad</mat-label>
+          <input matInput formControlName="municipio" placeholder="BOGOTÁ">
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Departamento</mat-label>
+          <input matInput formControlName="departamento" placeholder="Cundinamarca">
+          <mat-icon matPrefix>map</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Valor mínimo (COP)</mat-label>
+          <input matInput formControlName="valor_min" type="number" placeholder="50000000">
+          <mat-icon matPrefix>attach_money</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Valor máximo (COP)</mat-label>
+          <input matInput formControlName="valor_max" type="number" placeholder="500000000">
+          <mat-icon matPrefix>money_off</mat-icon>
+        </mat-form-field>
+
+        <div class="filtros-actions">
+          <button mat-stroked-button type="button" (click)="limpiar()">
+            <mat-icon>clear</mat-icon> Limpiar
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="cargando()">
+            <mat-icon>search</mat-icon> Buscar
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Resultados -->
+  <div class="resultados">
+
+    <div class="resultados-header" *ngIf="buscado()">
+      <span *ngIf="!cargando()">{{ licitaciones().length }} contratos encontrados</span>
+    </div>
+
+    <!-- Cargando -->
+    <div class="loading" *ngIf="cargando()">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Consultando SECOP II...</p>
+    </div>
+
+    <!-- Lista -->
+    <div class="lista" *ngIf="!cargando()">
+      <mat-card *ngFor="let l of licitaciones()" class="licit-card">
+        <mat-card-content>
+
+          <div class="licit-header">
+            <div class="licit-info">
+              <h3>{{ l.nombre_entidad }}</h3>
+              <p class="licit-objeto">{{ l.objeto_del_contrato | slice:0:120 }}...</p>
+            </div>
+            <div class="licit-valor">
+              {{ formatCuantia(l.valor_del_contrato) }}
+            </div>
+          </div>
+
+          <div class="licit-tags">
+            <span class="tag estado" [style.background]="getEstadoColor(l.estado_contrato) + '22'"
+              [style.color]="getEstadoColor(l.estado_contrato)">
+              {{ l.estado_contrato }}
+            </span>
+            <span class="tag">{{ l.tipo_de_contrato }}</span>
+            <span class="tag" *ngIf="l.ciudad">📍 {{ l.ciudad }}, {{ l.departamento }}</span>
+            <span class="tag pyme" *ngIf="l.es_pyme === 'Si'">PYME</span>
+          </div>
+
+          <div class="licit-footer">
+            <span class="fecha" *ngIf="l.fecha_de_firma">
+              <mat-icon>calendar_today</mat-icon>
+              {{ l.fecha_de_firma | date:'dd/MM/yyyy' }}
+            </span>
+            <div class="licit-acciones">
+              <button mat-stroked-button (click)="abrirSecop(l.urlproceso)"
+                *ngIf="l.urlproceso" matTooltip="Ver en SECOP II">
+                <mat-icon>open_in_new</mat-icon> SECOP II
+              </button>
+              <button mat-raised-button color="primary" (click)="irAPrediccion(l)"
+                matTooltip="Analizar probabilidad de éxito">
+                <mat-icon>analytics</mat-icon> Analizar
+              </button>
+            </div>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Sin resultados -->
+      <div class="empty" *ngIf="licitaciones().length === 0 && buscado()">
+        <mat-icon>search_off</mat-icon>
+        <p>No se encontraron contratos con los filtros seleccionados</p>
+        <button mat-stroked-button (click)="limpiar()">Limpiar filtros</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

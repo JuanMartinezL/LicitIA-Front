@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-asistente',
   imports: [],
-  templateUrl: './asistente.html',
+  templateUrl: './asistente.component.html',
   styleUrl: './asistente.scss',
 })
-export class Asistente {}
+export class AsistenteComponent {}

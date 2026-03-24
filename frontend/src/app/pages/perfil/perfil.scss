@@ -1,0 +1,214 @@
+.perfil-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+  h1 { font-size: 24px; font-weight: 700; color: #1a237e; margin: 0 0 6px; }
+  p  { color: #666; margin: 0; font-size: 14px; }
+}
+
+// ─── NIT Buscador ──────────────────────────────────────────
+.nit-card {
+  border-radius: 12px !important;
+  margin-bottom: 24px;
+}
+
+.nit-form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 56px;
+    white-space: nowrap;
+  }
+}
+
+.nit-field { flex: 1; }
+
+// ─── Error ─────────────────────────────────────────────────
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c62828;
+  background: #ffebee;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+// ─── Loading ───────────────────────────────────────────────
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px;
+  color: #888;
+}
+
+// ─── Empresa header ────────────────────────────────────────
+.empresa-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h2 { font-size: 22px; font-weight: 700; color: #1a237e; margin: 0 0 6px; }
+}
+
+.empresa-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #e8eaf6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon { color: #3f51b5; font-size: 28px; width: 28px; height: 28px; }
+}
+
+.nit-badge {
+  font-size: 13px;
+  background: #e8eaf6;
+  color: #3f51b5;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+// ─── Métricas ──────────────────────────────────────────────
+.metricas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metrica-card {
+  border-radius: 12px !important;
+  text-align: center;
+
+  mat-card-content {
+    padding: 20px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+.metrica-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.metrica-valor {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a237e;
+}
+
+.metrica-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// ─── Análisis ──────────────────────────────────────────────
+.analisis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.analisis-card {
+  border-radius: 12px !important;
+
+  mat-card-content { padding: 16px 20px !important; }
+}
+
+.bar-item {
+  margin-bottom: 12px;
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.bar-count {
+  font-weight: 600;
+  color: #1a237e;
+}
+
+.bar-track {
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.entidad-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+
+  &:last-child { border-bottom: none; }
+}
+
+.entidad-nombre {
+  color: #444;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.entidad-count {
+  font-weight: 600;
+  color: #3f51b5;
+  white-space: nowrap;
+}
+
+// ─── Tabla contratos ───────────────────────────────────────
+.contratos-card {
+  border-radius: 12px !important;
+
+  mat-card-content { padding: 0 !important; }
+}
+
+.contratos-table {
+  width: 100%;
+
+  th { font-weight: 600; color: #444; font-size: 13px; }
+  td { font-size: 13px; color: #555; }
+}
+
+.estado-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}

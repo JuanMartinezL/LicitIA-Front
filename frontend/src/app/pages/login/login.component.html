@@ -1,0 +1,109 @@
+<div class="auth-container">
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <mat-icon class="auth-logo">gavel</mat-icon>
+      <h1>LicitIA</h1>
+      <p>Inteligencia para tus licitaciones</p>
+    </div>
+
+    <!-- Tabs Login / Registro -->
+    <mat-tab-group [(selectedIndex)]="tabIndex" animationDuration="200ms">
+
+      <!-- TAB LOGIN -->
+      <mat-tab label="Iniciar sesión">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="tu@empresa.com">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">El correo es requerido</mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Correo inválido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput formControlName="password" [type]="mostrarPassword ? 'text' : 'password'">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="mostrarPassword = !mostrarPassword">
+              <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida</mat-error>
+          </mat-form-field>
+
+          <div class="error-msg" *ngIf="error">
+            <mat-icon>error_outline</mat-icon>
+            {{ error }}
+          </div>
+
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="loginForm.invalid || cargando" class="submit-btn">
+            <mat-spinner diameter="20" *ngIf="cargando"></mat-spinner>
+            <span *ngIf="!cargando">Ingresar</span>
+          </button>
+
+        </form>
+      </mat-tab>
+
+      <!-- TAB REGISTRO -->
+      <mat-tab label="Crear cuenta">
+        <form [formGroup]="registroForm" (ngSubmit)="onRegistro()" class="auth-form">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput formControlName="nombre" placeholder="Juan Martínez">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="registroForm.get('nombre')?.hasError('required')">El nombre es requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput formControlName="email" type="email">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="registroForm.get('email')?.hasError('required')">El correo es requerido</mat-error>
+            <mat-error *ngIf="registroForm.get('email')?.hasError('email')">Correo inválido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Empresa</mat-label>
+            <input matInput formControlName="empresa" placeholder="Mi Empresa SAS">
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-error *ngIf="registroForm.get('empresa')?.hasError('required')">La empresa es requerida</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>NIT de la empresa</mat-label>
+            <input matInput formControlName="nit" placeholder="900123456">
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-error *ngIf="registroForm.get('nit')?.hasError('required')">El NIT es requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput formControlName="password" [type]="mostrarPassword ? 'text' : 'password'">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix type="button" (click)="mostrarPassword = !mostrarPassword">
+              <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="registroForm.get('password')?.hasError('required')">La contraseña es requerida</mat-error>
+            <mat-error *ngIf="registroForm.get('password')?.hasError('minlength')">Mínimo 6 caracteres</mat-error>
+          </mat-form-field>
+
+          <div class="error-msg" *ngIf="error">
+            <mat-icon>error_outline</mat-icon>
+            {{ error }}
+          </div>
+
+          <button mat-raised-button color="primary" type="submit"
+            [disabled]="registroForm.invalid || cargando" class="submit-btn">
+            <mat-spinner diameter="20" *ngIf="cargando"></mat-spinner>
+            <span *ngIf="!cargando">Crear cuenta</span>
+          </button>
+
+        </form>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</div>

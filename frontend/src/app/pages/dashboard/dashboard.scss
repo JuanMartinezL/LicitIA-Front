@@ -1,0 +1,184 @@
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+// ─── Header ────────────────────────────────────────────────
+.dashboard-header {
+  margin-bottom: 36px;
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a237e;
+    margin: 0 0 6px;
+  }
+
+  .empresa {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+// ─── Secciones ─────────────────────────────────────────────
+.seccion {
+  margin-bottom: 40px;
+}
+
+.seccion-titulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// ─── Accesos rápidos ───────────────────────────────────────
+.accesos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.acceso-card {
+  cursor: pointer;
+  border-top: 4px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 12px !important;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+  }
+
+  mat-card-content {
+    padding: 20px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a2e;
+  }
+
+  p {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.acceso-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon { font-size: 22px; width: 22px; height: 22px; }
+}
+
+// ─── Predicciones ──────────────────────────────────────────
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: white;
+  border-radius: 12px;
+  border: 2px dashed #e0e0e0;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #bdbdbd;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+}
+
+.predicciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prediccion-card {
+  border-radius: 10px !important;
+
+  mat-card-content {
+    padding: 16px 20px !important;
+  }
+}
+
+.prediccion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+
+  h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: #1a1a2e;
+  }
+
+  .sector {
+    font-size: 12px;
+    color: #888;
+  }
+}
+
+.porcentaje {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.prediccion-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .cuantia {
+    font-size: 13px;
+    color: #555;
+  }
+}
+
+.modo-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #eeeeee;
+  color: #666;
+  font-weight: 500;
+
+  &.real {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+}
+
+.ver-mas {
+  text-align: center;
+  margin-top: 8px;
+}

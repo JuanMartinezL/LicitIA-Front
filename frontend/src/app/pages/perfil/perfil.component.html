@@ -1,0 +1,188 @@
+<div class="perfil-page">
+
+  <div class="page-header">
+    <h1>Mi Empresa</h1>
+    <p>Historial competitivo en el SECOP II basado en tu NIT</p>
+  </div>
+
+  <!-- Buscador NIT -->
+  <mat-card class="nit-card">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="buscar()" class="nit-form">
+        <mat-form-field appearance="outline" class="nit-field">
+          <mat-label>NIT de la empresa</mat-label>
+          <input matInput formControlName="nit" placeholder="900123456">
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-error>NIT inválido</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || cargando()">
+          <mat-spinner diameter="18" *ngIf="cargando()"></mat-spinner>
+          <mat-icon *ngIf="!cargando()">search</mat-icon>
+          {{ cargando() ? 'Buscando...' : 'Consultar SECOP II' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Error -->
+  <div class="error-msg" *ngIf="error()">
+    <mat-icon>info</mat-icon>
+    {{ error() }}
+  </div>
+
+  <!-- Cargando -->
+  <div class="loading" *ngIf="cargando()">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Consultando historial en el SECOP II...</p>
+  </div>
+
+  <!-- Resultados -->
+  <div *ngIf="perfil() && !cargando()">
+
+    <!-- Encabezado empresa -->
+    <div class="empresa-header">
+      <div class="empresa-avatar">
+        <mat-icon>business</mat-icon>
+      </div>
+      <div>
+        <h2>{{ perfil().nombre_empresa }}</h2>
+        <span class="nit-badge">NIT {{ perfil().nit }}</span>
+      </div>
+    </div>
+
+    <!-- Métricas resumen -->
+    <div class="metricas-grid">
+      <mat-card class="metrica-card">
+        <mat-card-content>
+          <mat-icon class="metrica-icon" style="color:#3f51b5">assignment</mat-icon>
+          <div class="metrica-valor">{{ perfil().resumen.total_contratos }}</div>
+          <div class="metrica-label">Total contratos</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metrica-card">
+        <mat-card-content>
+          <mat-icon class="metrica-icon" style="color:#4caf50">play_circle</mat-icon>
+          <div class="metrica-valor">{{ perfil().resumen.contratos_activos }}</div>
+          <div class="metrica-label">En ejecución</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metrica-card">
+        <mat-card-content>
+          <mat-icon class="metrica-icon" style="color:#ff9800">payments</mat-icon>
+          <div class="metrica-valor">{{ formatCuantia(perfil().resumen.cuantia_total) }}</div>
+          <div class="metrica-label">Valor total</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="metrica-card">
+        <mat-card-content>
+          <mat-icon class="metrica-icon" style="color:#9c27b0">show_chart</mat-icon>
+          <div class="metrica-valor">{{ formatCuantia(perfil().resumen.cuantia_promedio) }}</div>
+          <div class="metrica-label">Valor promedio</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Tipos de contrato y ciudades -->
+    <div class="analisis-grid">
+
+      <mat-card class="analisis-card">
+        <mat-card-header>
+          <mat-card-title>Tipos de contrato</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="bar-item" *ngFor="let t of perfil().tipos_contrato">
+            <div class="bar-label">
+              <span>{{ t.tipo }}</span>
+              <span class="bar-count">{{ t.cantidad }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="(t.cantidad / perfil().resumen.total_contratos) * 100"
+                style="background: #3f51b5"></div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="analisis-card">
+        <mat-card-header>
+          <mat-card-title>Ciudades frecuentes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="bar-item" *ngFor="let c of perfil().ciudades_activas">
+            <div class="bar-label">
+              <span>{{ c.ciudad }}</span>
+              <span class="bar-count">{{ c.cantidad }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" [style.width.%]="(c.cantidad / perfil().resumen.total_contratos) * 100"
+                style="background: #4caf50"></div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="analisis-card">
+        <mat-card-header>
+          <mat-card-title>Entidades frecuentes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="entidad-item" *ngFor="let e of perfil().entidades_frecuentes">
+            <span class="entidad-nombre">{{ e.entidad }}</span>
+            <span class="entidad-count">{{ e.contratos }} contratos</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+    <!-- Últimos contratos -->
+    <mat-card class="contratos-card">
+      <mat-card-header>
+        <mat-card-title>Últimos contratos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="perfil().ultimos_contratos" class="contratos-table">
+
+          <ng-container matColumnDef="entidad">
+            <th mat-header-cell *matHeaderCellDef>Entidad</th>
+            <td mat-cell *matCellDef="let c">{{ c.nombre_entidad }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let c">{{ c.tipo_de_contrato }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="valor">
+            <th mat-header-cell *matHeaderCellDef>Valor</th>
+            <td mat-cell *matCellDef="let c">{{ formatCuantia(c.valor_del_contrato) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let c">
+              <span class="estado-badge"
+                [style.color]="getEstadoColor(c.estado_contrato)"
+                [style.background]="getEstadoColor(c.estado_contrato) + '22'">
+                {{ c.estado_contrato }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef>Fecha firma</th>
+            <td mat-cell *matCellDef="let c">{{ c.fecha_de_firma | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnasContratos"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnasContratos;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+</div>

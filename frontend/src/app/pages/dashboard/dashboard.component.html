@@ -1,0 +1,76 @@
+<div class="dashboard">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>Bienvenido, {{ usuario()?.nombre }} </h1>
+      <p class="empresa">{{ usuario()?.empresa }} · NIT {{ usuario()?.nit }}</p>
+    </div>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <section class="seccion">
+    <h2 class="seccion-titulo">¿Qué quieres hacer hoy?</h2>
+    <div class="accesos-grid">
+      <mat-card
+        *ngFor="let acceso of accesos"
+        class="acceso-card"
+        (click)="irA(acceso.ruta)"
+        [style.border-top-color]="acceso.color">
+        <mat-card-content>
+          <div class="acceso-icon" [style.background]="acceso.color + '1a'">
+            <mat-icon [style.color]="acceso.color">{{ acceso.icon }}</mat-icon>
+          </div>
+          <h3>{{ acceso.label }}</h3>
+          <p>{{ acceso.desc }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Últimas predicciones -->
+  <section class="seccion">
+    <h2 class="seccion-titulo">Mis últimas predicciones</h2>
+
+    <div *ngIf="cargando()" class="loading">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+
+    <div *ngIf="!cargando() && predicciones().length === 0" class="empty-state">
+      <mat-icon>analytics</mat-icon>
+      <p>Aún no has analizado ninguna licitación.</p>
+      <button mat-raised-button color="primary" routerLink="/prediccion">
+        Analizar mi primera licitación
+      </button>
+    </div>
+
+    <div class="predicciones-lista" *ngIf="!cargando() && predicciones().length > 0">
+      <mat-card *ngFor="let p of predicciones()" class="prediccion-card">
+        <mat-card-content>
+          <div class="prediccion-header">
+            <div>
+              <h4>{{ p.entidad }}</h4>
+              <span class="sector">{{ p.sector }} · {{ p.municipio || 'Colombia' }}</span>
+            </div>
+            <div class="porcentaje" [style.color]="getColorPorcentaje(p.porcentaje)">
+              {{ p.porcentaje }}%
+            </div>
+          </div>
+          <div class="prediccion-footer">
+            <span class="cuantia">${{ p.cuantia | number }}</span>
+            <span class="modo-badge" [class.real]="p.modo === 'real'">
+              {{ p.modo === 'real' ? 'Modelo IA' : 'Estimación' }}
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="ver-mas">
+        <button mat-stroked-button color="primary" routerLink="/prediccion">
+          Ver todas mis predicciones
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>
